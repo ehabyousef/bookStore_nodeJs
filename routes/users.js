@@ -16,10 +16,10 @@ export const usersRouter = express.Router();
 usersRouter.get("/", verifyTokenAndAdmin, getAllUsers);
 
 // Get user by ID (user himself or admin)
-usersRouter.get("/:id", verifyTokenAndAuthorization, getUserById);
-
 // Update user (user himself or admin)
-usersRouter.put("/updateUser/:id", verifyTokenAndAuthorization, updateUser);
-
 // Delete user (user himself or admin)
-usersRouter.delete("/:id", verifyTokenAndAuthorization, deleteUser);
+usersRouter
+  .route("/:id")
+  .get(verifyTokenAndAuthorization, getUserById)
+  .put(verifyTokenAndAuthorization, updateUser)
+  .delete(verifyTokenAndAuthorization, deleteUser);

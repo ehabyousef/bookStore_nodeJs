@@ -11,16 +11,18 @@ import {
 export const authorRoutes = express.Router();
 
 // Get all authors with pagination
+// Create new author (only admin)
+authorRoutes
+  .route("/")
+  .get(getAllAuthors)
+  .post(verifyTokenAndAdmin, createAuthor);
 authorRoutes.get("/", getAllAuthors);
 
 // Get author by ID
-authorRoutes.get("/:id", getAuthorById);
-
-// Create new author (only admin)
-authorRoutes.post("/newAuthor", verifyTokenAndAdmin, createAuthor);
-
 // Update author (only admin)
-authorRoutes.put("/:id", verifyTokenAndAdmin, updateAuthor);
-
 // Delete author (only admin)
-authorRoutes.delete("/:id", verifyTokenAndAdmin, deleteAuthor);
+authorRoutes
+  .route("/")
+  .get(getAuthorById)
+  .put(verifyTokenAndAdmin, updateAuthor)
+  .delete(verifyTokenAndAdmin, deleteAuthor);

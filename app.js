@@ -8,6 +8,7 @@ import { looger } from "./middlwares/logger.js";
 import { errorHandler, notFound } from "./middlwares/error.js";
 import { registerRoutes } from "./routes/auth.js";
 import { usersRouter } from "./routes/users.js";
+import { passwordRouter } from "./routes/password.js";
 import { connectToDb } from "./config/db.js";
 dotenv.config();
 
@@ -16,13 +17,15 @@ const app = express();
 
 // apply middlewares
 app.use(express.json());
-
 app.use(looger);
+app.set("view engine", "ejs");
 
+//routes
 app.use("/api/author", authorRoutes);
 app.use("/api/books", bookRouter);
 app.use("/api/auth", registerRoutes);
 app.use("/api/users", usersRouter);
+app.use("/password", passwordRouter);
 
 // errors handlers
 
