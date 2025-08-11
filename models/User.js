@@ -72,3 +72,9 @@ export function validateUpdateUser(user) {
   });
   return schema.validate(user);
 }
+export function validateChangePassword(user) {
+  const schema = Joi.object({
+    password: Joi.string().min(6).required(),
+  });
+  return schema.validate(user);
+}

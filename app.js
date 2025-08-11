@@ -15,7 +15,8 @@ import dotenv from "dotenv";
 
 import { looger } from "./middlwares/logger.js";
 import { errorHandler, notFound } from "./middlwares/error.js";
-
+import helmet from "helmet";
+import cors from "cors";
 dotenv.config();
 
 connectToDb();
@@ -25,6 +26,10 @@ const app = express();
 app.use(
   express.static(join(dirname(fileURLToPath(import.meta.url)), "../images"))
 );
+// helmet secure
+app.use(helmet());
+// cors  plicy
+app.use(cors());
 // apply middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

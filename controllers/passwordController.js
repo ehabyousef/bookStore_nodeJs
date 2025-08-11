@@ -1,5 +1,5 @@
 import expressAsyncHandler from "express-async-handler";
-import { User } from "../models/User.js";
+import { User, validateChangePassword } from "../models/User.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import nodemailer from "nodemailer";
@@ -58,12 +58,12 @@ export const SendForgetPassword = expressAsyncHandler(async (req, res) => {
   transport.sendMail(mailOptions, function (error, success) {
     if (error) {
       console.log(error);
+      res.status(500).json({ msg: "failed to send email " });
     } else {
       console.log("email send " + success.response);
+      res.render("link-send");
     }
   });
-
-  res.render("link-send");
 });
 
 /**
@@ -109,7 +109,10 @@ export const getResetPasswordView = expressAsyncHandler(async (req, res) => {
 
 export const resetPassword = expressAsyncHandler(async (req, res) => {
   // todo validation
-
+  const { error } = validateChangePassword(req.body);
+  if (error) {
+    res.status(400).json({ msg: error.details[0].message });
+  }
   // Use await and correct format for findById
   const user = await User.findById(req.params.userId);
 
