@@ -1,22 +1,33 @@
 import express from "express";
-import mongoose from "mongoose";
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
+
 import { authorRoutes } from "./routes/authors.js";
 import { bookRouter } from "./routes/books.js";
-
-import dotenv from "dotenv";
-import { looger } from "./middlwares/logger.js";
-import { errorHandler, notFound } from "./middlwares/error.js";
 import { registerRoutes } from "./routes/auth.js";
 import { usersRouter } from "./routes/users.js";
 import { passwordRouter } from "./routes/password.js";
+import { uploadRouter } from "./routes/upload.js";
+
 import { connectToDb } from "./config/db.js";
+
+import dotenv from "dotenv";
+
+import { looger } from "./middlwares/logger.js";
+import { errorHandler, notFound } from "./middlwares/error.js";
+
 dotenv.config();
 
 connectToDb();
 const app = express();
 
+// static folders
+app.use(
+  express.static(join(dirname(fileURLToPath(import.meta.url)), "../images"))
+);
 // apply middlewares
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(looger);
 app.set("view engine", "ejs");
 
@@ -26,6 +37,7 @@ app.use("/api/books", bookRouter);
 app.use("/api/auth", registerRoutes);
 app.use("/api/users", usersRouter);
 app.use("/password", passwordRouter);
+app.use("/api/upload", uploadRouter);
 
 // errors handlers
 
